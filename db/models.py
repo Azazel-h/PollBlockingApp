@@ -29,7 +29,6 @@ class DbAdmin(DbCon):
         super(DbAdmin, self).__init__()
 
     def _get_max_poll_id(self):
-        # TODO check 0 polls
         cur = self.con.cursor()
         cur.execute("""
         SELECT MAX(id) FROM polls;
@@ -37,6 +36,9 @@ class DbAdmin(DbCon):
 
         max_id = cur.fetchone()[0]
         cur.close()
+
+        if max_id is None:
+            return 0
 
         return max_id
 
@@ -66,8 +68,6 @@ class DbAdmin(DbCon):
         self.con.commit()
 
     def edit_poll(self, poll_id: int, field: str, value: any):
-        # edit one field TODO all fields (mb by dict)
-        field = "{}".format(field)
         cur = self.con.cursor()
         sql = """
         UPDATE polls 

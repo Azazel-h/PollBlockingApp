@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users(
+CREATE TABLE IF NOT EXISTS users (
     login varchar(255) unique not null primary key,
     name varchar(255),
     email varchar(255),
@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS users(
     skipped int
 );
 
-CREATE TABLE IF NOT EXISTS polls
-(
+CREATE TABLE IF NOT EXISTS polls (
     id            int unique not null primary key,
     question           varchar(255),
     answer_correct     varchar(255),
@@ -18,7 +17,7 @@ CREATE TABLE IF NOT EXISTS polls
     category           varchar(255)
 );
 
-CREATE TABLE IF NOT EXISTS answers(
+CREATE TABLE IF NOT EXISTS answers (
     poll_id int,
     user_login varchar(255),
     date date,
