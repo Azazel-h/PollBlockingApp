@@ -8,3 +8,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: postgres
+    restart: on-failure
+    container_name: db
+
+  api:
+    build:
+      context: .
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    restart: on-failure
+    container_name: api

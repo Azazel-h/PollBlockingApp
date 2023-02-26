@@ -4,6 +4,7 @@ import psycopg2
 class DbCon:
     def __init__(self):
         self.con = self._connect_to_db()
+        self._create_tables()
 
     @staticmethod
     def _connect_to_db():
@@ -12,7 +13,7 @@ class DbCon:
                 database="postgres",
                 user="postgres",
                 password="1234",
-                host="localhost",
+                host="db",
                 port="5432"
             )
         except Exception:
@@ -22,6 +23,43 @@ class DbCon:
 
     def __del__(self):
         self.con.close()
+
+    def _create_tables(self):
+        cur = self.con.cursor()
+        sql = """
+            CREATE TABLE IF NOT EXISTS users (
+                login varchar(255) unique not null primary key,
+                name varchar(255),
+                email varchar(255),
+                status varchar(255),
+                skipped int
+            );
+            
+            CREATE TABLE IF NOT EXISTS polls (
+                id            int unique not null primary key,
+                question           varchar(255),
+                answer_correct     varchar(255),
+                answer_incorrect_1 varchar(255),
+                answer_incorrect_2 varchar(255),
+                date               date,
+                time               time,
+                category           varchar(255)
+            );
+            
+            CREATE TABLE IF NOT EXISTS answers (
+                poll_id int,
+                user_login varchar(255),
+                date date,
+                time time,
+                answer int,
+                status varchar(255),
+                FOREIGN KEY (poll_id) REFERENCES polls(id),
+                FOREIGN KEY (user_login) REFERENCES users(login)
+            );
+        """
+
+        cur.execute(sql)
+        self.con.commit()
 
 
 class DbAdmin(DbCon):
